@@ -1,0 +1,274 @@
+<div class="animate-fade-in">
+  <!-- Page Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 rounded-[14px] bg-gradient-to-br from-ooredoo-600 to-ooredoo-800 flex items-center justify-center shadow-btn-red">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+          <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-[1.625rem] font-extrabold text-brand-text tracking-tight">Départements</h1>
+        <p class="text-[0.8125rem] text-brand-muted mt-0.5">Gérez les départements de votre organisation</p>
+      </div>
+    </div>
+    <button class="btn-ooredoo" (click)="openCreateModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="w-[18px] h-[18px]">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      <span>Nouveau Département</span>
+    </button>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-3 gap-4 mb-6">
+    <div class="card-ooredoo flex items-center gap-4 p-5 cursor-pointer hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200" (click)="setFilter('tous')">
+      <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-indigo-500/10">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-[22px] h-[22px]">
+          <rect x="4" y="2" width="16" height="20" rx="2"/>
+        </svg>
+      </div>
+      <div>
+        <span class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight">{{ departements().length }}</span>
+        <span class="block text-xs text-brand-muted font-medium mt-0.5">Total</span>
+      </div>
+    </div>
+    <div class="card-ooredoo flex items-center gap-4 p-5 cursor-pointer hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200" (click)="setFilter('actifs')">
+      <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-emerald-500/10">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-[22px] h-[22px]">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <div>
+        <span class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight">{{ activeDeptCount }}</span>
+        <span class="block text-xs text-brand-muted font-medium mt-0.5">Actifs</span>
+      </div>
+    </div>
+    <div class="card-ooredoo flex items-center gap-4 p-5 cursor-pointer hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200" (click)="setFilter('archives')">
+      <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-amber-500/10">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-[22px] h-[22px]">
+          <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/>
+        </svg>
+      </div>
+      <div>
+        <span class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight">{{ archivedDeptCount }}</span>
+        <span class="block text-xs text-brand-muted font-medium mt-0.5">Archivés</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="flex items-center justify-between gap-4 mb-4">
+    <div class="flex bg-white border border-brand-border rounded-[10px] p-[3px] gap-[2px]">
+      <button class="px-4 py-2 text-[0.8125rem] font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
+        [class]="activeFilter === 'actifs' ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(217,0,18,0.2)]' : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'"
+        (click)="setFilter('actifs')">Actifs</button>
+      <button class="px-4 py-2 text-[0.8125rem] font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
+        [class]="activeFilter === 'archives' ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(217,0,18,0.2)]' : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'"
+        (click)="setFilter('archives')">Archivés</button>
+      <button class="px-4 py-2 text-[0.8125rem] font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
+        [class]="activeFilter === 'tous' ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(217,0,18,0.2)]' : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'"
+        (click)="setFilter('tous')">Tous</button>
+    </div>
+    <div class="flex items-center gap-2 bg-white border border-brand-border rounded-[10px] px-4 py-2 min-w-[280px] transition-all duration-200 focus-within:border-ooredoo-600 focus-within:shadow-[0_0_0_3px_rgba(217,0,18,0.08)]">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="w-[18px] h-[18px] text-brand-light flex-shrink-0">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="text" placeholder="Rechercher un département..." [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()"
+        class="flex-1 border-none bg-transparent text-sm text-brand-text outline-none placeholder:text-brand-light"/>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="card-ooredoo overflow-hidden">
+    @if (isLoading()) {
+      <div class="flex flex-col items-center justify-center py-16 gap-4">
+        <div class="w-9 h-9 rounded-full border-[3px] border-brand-border border-t-ooredoo-600 animate-spin"></div>
+        <span class="text-sm text-brand-muted">Chargement des départements...</span>
+      </div>
+    } @else if (filteredDepartements().length === 0) {
+      <div class="flex flex-col items-center justify-center py-16 text-center">
+        <div class="w-16 h-16 rounded-2xl bg-ooredoo-600/[0.06] flex items-center justify-center mb-4">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="1.5" class="w-8 h-8">
+            <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-brand-text mb-1">Aucun département trouvé</h3>
+        <p class="text-sm text-brand-muted mb-5">{{ searchTerm ? 'Essayez de modifier votre recherche' : 'Commencez par créer un nouveau département' }}</p>
+        @if (!searchTerm) {
+          <button class="btn-ooredoo text-xs px-4 py-2" (click)="openCreateModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="w-4 h-4">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Créer un département
+          </button>
+        }
+      </div>
+    } @else {
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="bg-brand-bg border-b border-brand-border">
+            <th class="px-5 py-3.5 text-left text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-brand-muted">Nom du Département</th>
+            <th class="px-5 py-3.5 text-left text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-brand-muted">Statut</th>
+            <th class="px-5 py-3.5 text-right text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-brand-muted">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (dept of filteredDepartements(); track dept.id) {
+            <tr class="border-b border-brand-border last:border-b-0 transition-colors hover:bg-ooredoo-600/[0.02]" [class.opacity-70]="dept.archive">
+              <td class="px-5 py-4">
+                <div class="flex items-center gap-3.5">
+                  <div class="w-[38px] h-[38px] rounded-[10px] flex items-center justify-center flex-shrink-0"
+                    [class]="dept.archive ? 'bg-amber-500/10' : 'bg-ooredoo-600/[0.06]'">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-[18px] h-[18px]"
+                      [attr.stroke]="dept.archive ? '#F59E0B' : '#D90012'">
+                      <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/>
+                    </svg>
+                  </div>
+                  <span class="text-[0.9375rem] font-semibold text-brand-text">{{ dept.nom }}</span>
+                </div>
+              </td>
+              <td class="px-5 py-4">
+                <span class="badge-status" [class]="dept.archive ? 'bg-amber-50 text-amber-800' : 'bg-emerald-50 text-emerald-800'">
+                  <span class="w-1.5 h-1.5 rounded-full" [class]="dept.archive ? 'bg-amber-500' : 'bg-emerald-500'"></span>
+                  {{ dept.archive ? 'Archivé' : 'Actif' }}
+                </span>
+              </td>
+              <td class="px-5 py-4 text-right">
+                <div class="flex items-center gap-1.5 justify-end">
+                  @if (!dept.archive) {
+                    <button title="Modifier" (click)="openEditModal(dept)"
+                      class="w-9 h-9 rounded-[10px] border border-brand-border bg-white flex items-center justify-center transition-all duration-200 hover:bg-blue-50 hover:border-blue-400 cursor-pointer">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-brand-muted hover:text-blue-500">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                      </svg>
+                    </button>
+                  }
+                  <button [title]="dept.archive ? 'Désarchiver' : 'Archiver'" (click)="openArchiveConfirm(dept)"
+                    class="w-9 h-9 rounded-[10px] border border-brand-border bg-white flex items-center justify-center transition-all duration-200 cursor-pointer"
+                    [class]="dept.archive ? 'hover:bg-emerald-50 hover:border-emerald-400' : 'hover:bg-amber-50 hover:border-amber-400'">
+                    @if (dept.archive) {
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-brand-muted">
+                        <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                      </svg>
+                    } @else {
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-brand-muted">
+                        <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/>
+                      </svg>
+                    }
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>
+
+<!-- ═══════ CREATE/EDIT MODAL ═══════ -->
+@if (showModal()) {
+  <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1000] animate-overlay-in p-5" (click)="closeModal()">
+    <div class="bg-white rounded-2xl w-full max-w-[520px] shadow-modal animate-modal-in" (click)="$event.stopPropagation()">
+      <div class="flex items-center justify-between p-6 pb-4">
+        <div class="flex items-center gap-3.5">
+          <div class="w-[42px] h-[42px] rounded-xl bg-ooredoo-600/[0.06] flex items-center justify-center flex-shrink-0">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+              <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-lg font-extrabold text-brand-text">{{ modalMode === 'create' ? 'Nouveau Département' : 'Modifier le Département' }}</h2>
+            <p class="text-[0.8125rem] text-brand-muted mt-0.5">{{ modalMode === 'create' ? 'Ajoutez un nouveau département à votre organisation' : 'Modifiez les informations du département' }}</p>
+          </div>
+        </div>
+        <button (click)="closeModal()" class="w-9 h-9 rounded-[10px] border border-brand-border bg-white flex items-center justify-center transition-all duration-200 hover:bg-red-50 hover:border-ooredoo-600 cursor-pointer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="w-[18px] h-[18px] text-brand-muted">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="px-6 pb-6">
+        @if (modalError()) {
+          <div class="flex items-center gap-2 p-3 mb-4 bg-red-50 border border-red-200 rounded-[10px]">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" class="w-[18px] h-[18px] flex-shrink-0">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span class="text-[0.8125rem] text-ooredoo-800">{{ modalError() }}</span>
+          </div>
+        }
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-[0.08em] text-brand-muted mb-2">Nom du département</label>
+          <input type="text" class="form-ooredoo" placeholder="Ex: Direction des Ressources Humaines"
+            [(ngModel)]="departementNom" (keyup.enter)="saveModal()" autofocus/>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 px-6 pb-6">
+        <button class="btn-cancel" (click)="closeModal()">Annuler</button>
+        <button class="btn-ooredoo" (click)="saveModal()" [disabled]="isSaving()">
+          @if (isSaving()) {
+            <div class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+          }
+          <span>{{ modalMode === 'create' ? 'Créer' : 'Enregistrer' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ═══════ CONFIRM DIALOG ═══════ -->
+@if (showDeleteConfirm()) {
+  <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1000] animate-overlay-in p-5" (click)="closeDeleteConfirm()">
+    <div class="bg-white rounded-2xl max-w-[420px] w-full shadow-modal animate-modal-in text-center p-8" (click)="$event.stopPropagation()">
+      <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5"
+        [class]="deletingDepartement?.archive ? 'bg-emerald-50' : 'bg-amber-50'">
+        @if (deletingDepartement?.archive) {
+          <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
+            <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+          </svg>
+        } @else {
+          <svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
+            <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/>
+          </svg>
+        }
+      </div>
+      <h3 class="text-lg font-extrabold text-brand-text mb-2">{{ deletingDepartement?.archive ? 'Désarchiver' : 'Archiver' }} ce département ?</h3>
+      <p class="text-sm text-brand-muted leading-relaxed mb-6">
+        {{ deletingDepartement?.archive
+          ? 'Le département "' + deletingDepartement?.nom + '" sera réactivé et visible dans la liste des départements actifs.'
+          : 'Le département "' + deletingDepartement?.nom + '" sera archivé et ne sera plus visible dans la liste active.'
+        }}
+      </p>
+      <div class="flex gap-3 justify-center">
+        <button class="btn-cancel" (click)="closeDeleteConfirm()">Annuler</button>
+        <button (click)="confirmArchive()"
+          [class]="deletingDepartement?.archive ? 'btn-ooredoo btn-success' : 'btn-ooredoo'">
+          {{ deletingDepartement?.archive ? 'Désarchiver' : 'Archiver' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ═══════ TOAST ═══════ -->
+@if (toastMessage()) {
+  <div class="fixed bottom-8 right-8 flex items-center gap-3 px-5 py-3.5 rounded-[14px] shadow-toast z-[2000] animate-toast-in text-sm font-semibold"
+    [class]="toastType() === 'success' ? 'bg-emerald-50 border border-emerald-200 text-emerald-800' : 'bg-red-50 border border-red-200 text-ooredoo-800'">
+    <div>
+      @if (toastType() === 'success') {
+        <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" class="w-5 h-5">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      } @else {
+        <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2.5" class="w-5 h-5">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      }
+    </div>
+    <span>{{ toastMessage() }}</span>
+  </div>
+}

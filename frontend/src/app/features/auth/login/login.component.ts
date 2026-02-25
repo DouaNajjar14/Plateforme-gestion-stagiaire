@@ -18,6 +18,7 @@ export class LoginComponent {
   showPassword = false;
   emailFocused = false;
   passwordFocused = false;
+  currentYear = new Date().getFullYear();
 
   // Pattern: min 8 chars, 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial
   private passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
@@ -45,7 +46,7 @@ export class LoginComponent {
     this.authService.login(this.loginForm.value).subscribe({
       next: () => {
         this.isLoading.set(false);
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/admin/dashboard']);
       },
       error: (error) => {
         this.isLoading.set(false);
