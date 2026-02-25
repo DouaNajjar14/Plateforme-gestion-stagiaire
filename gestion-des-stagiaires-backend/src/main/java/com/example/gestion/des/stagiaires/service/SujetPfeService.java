@@ -60,6 +60,7 @@ public class SujetPfeService {
         sujet.setCompetencesRequises(request.getCompetencesRequises());
         sujet.setNombreStagiaires(request.getNombreStagiaires());
         sujet.setNiveauAcademique(request.getNiveauAcademique());
+        sujet.setDureeEnMois(request.getDureeEnMois());
         sujet.setDepartement(departement);
 
         SujetPfe updated = sujetPfeRepository.save(sujet);
@@ -135,6 +136,7 @@ public class SujetPfeService {
                 .niveauAcademique(sujet.getNiveauAcademique())
                 .statut(sujet.getStatut())
                 .archive(sujet.getArchive())
+                .dureeEnMois(sujet.getDureeEnMois())
                 .departementId(sujet.getDepartement().getId())
                 .departementNom(sujet.getDepartement().getNom())
                 .dateCreation(sujet.getDateCreation())

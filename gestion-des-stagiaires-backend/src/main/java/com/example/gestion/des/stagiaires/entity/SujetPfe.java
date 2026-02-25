@@ -10,7 +10,6 @@ import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @Builder
 @Entity
 @Getter
@@ -46,6 +45,9 @@ public class SujetPfe {
 
     @Builder.Default
     private Boolean archive = false;
+
+    @Column(nullable = false)
+    private int dureeEnMois;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "departement_id", nullable = false)

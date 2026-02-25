@@ -35,6 +35,9 @@ public class SujetPfeRequest {
     @NotNull(message = "Le niveau académique est obligatoire")
     private NIVEAU niveauAcademique;
 
+    @Min(value = 1, message = "La durée en mois doit être au moins 1")
+    private int dureeEnMois;
+
     @NotNull(message = "Le département est obligatoire")
     private UUID departementId;
 }

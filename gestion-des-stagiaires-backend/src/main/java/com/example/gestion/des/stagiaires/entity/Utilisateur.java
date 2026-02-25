@@ -2,10 +2,7 @@ package com.example.gestion.des.stagiaires.entity;
 
 import com.example.gestion.des.stagiaires.enums.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,11 +12,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-@Data
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Getter
+@Setter
 @Table(name = "utilisateurs")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Utilisateur implements UserDetails {

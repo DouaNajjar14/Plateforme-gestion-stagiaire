@@ -25,6 +25,7 @@ public class SujetPfeResponse {
     private NIVEAU niveauAcademique;
     private STATUT statut;
     private Boolean archive;
+    private int dureeEnMois;
     private UUID departementId;
     private String departementNom;
     private LocalDateTime dateCreation;

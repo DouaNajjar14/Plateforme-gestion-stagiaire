@@ -22,14 +22,22 @@ public interface SujetPfeRepository extends JpaRepository<SujetPfe, UUID> {
 
     Page<SujetPfe> findByDepartement_IdAndArchiveFalse(UUID departementId, Pageable pageable);
 
-    @Query("SELECT s FROM SujetPfe s WHERE s.archive = false " +
-            "AND (:statut IS NULL OR s.statut = :statut) " +
-            "AND (:departementId IS NULL OR s.departement.id = :departementId) " +
-            "AND (:titre IS NULL OR LOWER(s.titre) LIKE LOWER(CONCAT('%', :titre, '%')))")
+    @Query("""
+
+            SELECT s FROM SujetPfe s
+WHERE s.archive = false
+AND (:statut IS NULL OR s.statut = :statut)
+AND (:departementId IS NULL OR s.departement.id = :departementId)
+AND (
+    :titre IS NULL OR :titre = '' 
+    OR LOWER(s.titre) LIKE LOWER(CONCAT('%', :titre, '%'))
+)
+""")
     Page<SujetPfe> rechercher(
             @Param("statut") STATUT statut,
             @Param("departementId") UUID departementId,
             @Param("titre") String titre,
-            Pageable pageable);
-}
+            Pageable pageable
+    );
+    }
 
