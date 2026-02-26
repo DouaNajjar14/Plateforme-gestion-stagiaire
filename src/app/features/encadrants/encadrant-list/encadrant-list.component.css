@@ -1,0 +1,347 @@
+:host {
+    display: block;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ENCADRANT LIST - PREMIUM OOREDOO THEME
+═══════════════════════════════════════════════════════════ */
+
+/* ═══════ ANIMATIONS ═══════ */
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+/* ═══════ BUTTON OOREDOO RED ═══════ */
+.btn-ooredoo-red {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.875rem 1.75rem;
+    background: linear-gradient(135deg, #D90012 0%, #B8000F 100%);
+    color: white;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(217, 0, 18, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-ooredoo-red::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-ooredoo-red:hover {
+    background: linear-gradient(135deg, #B8000F 0%, #960009 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(217, 0, 18, 0.4);
+}
+
+.btn-ooredoo-red:hover::before {
+    left: 100%;
+}
+
+.btn-ooredoo-red:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ═══════ ENCADRANT CARD ═══════ */
+.encadrant-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1.75rem;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.encadrant-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #D90012, #ff6b6b);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.encadrant-card:hover {
+    border-color: #D90012;
+    box-shadow: 0 12px 40px rgba(217, 0, 18, 0.12);
+    transform: translateY(-6px);
+}
+
+.encadrant-card:hover::before {
+    transform: scaleX(1);
+}
+
+/* ═══════ AVATAR ═══════ */
+.encadrant-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #D90012 0%, #ff4444 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.125rem;
+    flex-shrink: 0;
+    text-transform: uppercase;
+    box-shadow: 0 8px 20px rgba(217, 0, 18, 0.25);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.encadrant-avatar::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 21px;
+    border: 2px solid rgba(217, 0, 18, 0.2);
+    transition: all 0.3s ease;
+}
+
+.encadrant-card:hover .encadrant-avatar {
+    transform: scale(1.08) rotate(-3deg);
+    box-shadow: 0 12px 30px rgba(217, 0, 18, 0.35);
+}
+
+/* ═══════ ACTION BUTTONS ═══════ */
+.action-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    background: white;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.action-btn:hover {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.04);
+    color: #3b82f6;
+    transform: scale(1.1);
+}
+
+.action-btn-delete:hover {
+    border-color: #D90012;
+    background: rgba(217, 0, 18, 0.04);
+    color: #D90012;
+}
+
+/* ═══════ CAPACITY BAR ═══════ */
+.capacity-bar {
+    height: 8px;
+    background: linear-gradient(90deg, #fee2e2 0%, #fef2f2 100%);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+}
+
+.capacity-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #D90012 0%, #ff6b6b 100%);
+    border-radius: 999px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.capacity-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+    background-size: 200% 100%;
+}
+
+/* ═══════ MODAL INPUTS ═══════ */
+.modal-input {
+    width: 100%;
+    padding: 0.875rem 1.125rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 14px;
+    font-size: 0.9375rem;
+    color: #1f2937;
+    background: #fafafa;
+    transition: all 0.25s ease;
+    outline: none;
+}
+
+.modal-input.has-icon {
+    padding-left: 3rem;
+}
+
+.modal-input:focus {
+    background: white;
+    border-color: #D90012;
+    box-shadow: 0 0 0 4px rgba(217, 0, 18, 0.1);
+}
+
+.modal-input::placeholder {
+    color: #9CA3AF;
+}
+
+/* ═══════ MODAL BUTTONS ═══════ */
+.modal-btn-cancel {
+    padding: 0.875rem 1.5rem;
+    background: white;
+    color: #4b5563;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    border-radius: 12px;
+    border: 2px solid #e5e7eb;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.modal-btn-cancel:hover {
+    background: #f9fafb;
+    border-color: #d1d5db;
+}
+
+.confirm-btn-danger {
+    padding: 0.875rem 1.75rem;
+    background: linear-gradient(135deg, #D90012 0%, #B8000F 100%);
+    color: white;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(217, 0, 18, 0.25);
+}
+
+.confirm-btn-danger:hover {
+    background: linear-gradient(135deg, #B8000F 0%, #960009 100%);
+}
+
+.confirm-btn-success {
+    padding: 0.875rem 1.75rem;
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: white;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
+}
+
+.confirm-btn-success:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+/* ═══════ ANIMATIONS ═══════ */
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.animate-overlay-in {
+    animation: overlayIn 0.2s ease-out;
+}
+
+.animate-modal-in {
+    animation: modalIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes overlayIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes modalIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.animate-toast-in {
+    animation: toastIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes toastIn {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.shadow-modal {
+    box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.3);
+}

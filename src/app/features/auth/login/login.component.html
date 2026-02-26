@@ -1,0 +1,244 @@
+<div class="login-page">
+  <!-- Background -->
+  <div class="bg-scene">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+    <div class="bg-dots"></div>
+  </div>
+
+  <!-- Card -->
+  <div class="card">
+    <!-- ═══════ LEFT PANEL ═══════ -->
+    <div class="lp">
+      <div class="lp-linen"></div>
+      <div class="lp-lines"></div>
+      <div class="lp-orb"></div>
+      <div class="lp-ring"></div>
+      <div class="lp-arc"></div>
+      <div class="lp-wm">O</div>
+
+      <div class="lp-mid">
+        <div class="pill-live">
+          <span class="live-dot"></span>
+          Plateforme Officielle
+        </div>
+        <div class="headline">
+          <span class="hl-regular">Gérez</span>
+          <span class="hl-serif">vos stages</span>
+        </div>
+
+        <p class="lp-desc">
+          Pilotez, suivez et optimisez votre programme de stages depuis un
+          espace sécurisé et intuitif.
+        </p>
+      </div>
+
+      <div class="feats">
+        <div class="feat">
+          <div class="feat-accent"></div>
+          <div class="feat-ico">⚡</div>
+          <div class="feat-txt">
+            <b>Accès Instantané</b
+            ><span class="feat-sub"
+              >Connexion sécurisée en quelques secondes</span
+            >
+          </div>
+          <span class="feat-arr">›</span>
+        </div>
+
+        <div class="feat">
+          <div class="feat-accent"></div>
+          <div class="feat-ico">🔐</div>
+          <div class="feat-txt">
+            <b>100% Sécurisé</b
+            ><span class="feat-sub">Données chiffrées de bout en bout</span>
+          </div>
+          <span class="feat-arr">›</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ RIGHT PANEL ═══════ -->
+    <div class="rp">
+      <div class="rp-g1"></div>
+      <div class="rp-g2"></div>
+      <div class="rp-edge"></div>
+
+      <div class="rp-inner">
+        <!-- Logo -->
+        <div class="rp-logo">
+          <img src="ooredoo-logo.jpg" alt="Ooredoo" />
+        </div>
+
+        <div class="eyebrow">
+          <div class="ey-bar"></div>
+          <span class="ey-txt">Espace Sécurisé</span>
+        </div>
+
+        <p class="rp-sub">
+          Entrez vos identifiants pour accéder à votre espace personnalisé.
+        </p>
+
+        <!-- Error Message -->
+        @if (errorMessage()) {
+          <div class="error-alert">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <span>{{ errorMessage() }}</span>
+          </div>
+        }
+
+        <form
+          [formGroup]="loginForm"
+          (ngSubmit)="onSubmit()"
+          autocomplete="off"
+        >
+          <!-- Email Field -->
+          <div class="field">
+            <div class="f-head">
+              <span class="f-lbl" [class.active]="emailFocused"
+                >Adresse Email</span
+              >
+            </div>
+            <div class="fw">
+              <span class="fic">
+                <svg viewBox="0 0 24 24">
+                  <rect x="2" y="4" width="20" height="16" rx="3" />
+                  <polyline points="2,4 12,13 22,4" />
+                </svg>
+              </span>
+              <input
+                class="inp"
+                type="email"
+                formControlName="email"
+                placeholder="prenom.nom@ooredoo.tn"
+                (focus)="emailFocused = true"
+                (blur)="emailFocused = false"
+              />
+            </div>
+            @if (email?.invalid && email?.touched) {
+              <span class="field-error">
+                {{
+                  email?.errors?.["required"]
+                    ? "L'email est requis"
+                    : "L'email doit être au format @ooredoo.tn"
+                }}
+              </span>
+            }
+          </div>
+
+          <!-- Password Field -->
+          <div class="field">
+            <div class="f-head">
+              <span class="f-lbl" [class.active]="passwordFocused"
+                >Mot de Passe</span
+              >
+            </div>
+            <div class="fw">
+              <span class="fic">
+                <svg viewBox="0 0 24 24">
+                  <rect x="3" y="11" width="18" height="11" rx="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              </span>
+              <input
+                class="inp"
+                [type]="showPassword ? 'text' : 'password'"
+                formControlName="motDePasse"
+                placeholder="••••••••••••"
+                (focus)="passwordFocused = true"
+                (blur)="passwordFocused = false"
+              />
+              <button
+                type="button"
+                class="eye-btn"
+                (click)="showPassword = !showPassword"
+              >
+                @if (showPassword) {
+                  <svg viewBox="0 0 24 24">
+                    <path
+                      d="M17.94 17.94A10 10 0 0 1 12 20c-7 0-11-8-11-8a18.5 18.5 0 0 1 5.06-5.94"
+                    />
+                    <line x1="1" y1="1" x2="23" y2="23" />
+                  </svg>
+                } @else {
+                  <svg viewBox="0 0 24 24">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                }
+              </button>
+            </div>
+            @if (motDePasse?.invalid && motDePasse?.touched) {
+              <div class="password-requirements">
+                @if (motDePasse?.errors?.["required"]) {
+                  <span class="field-error">Le mot de passe est requis</span>
+                } @else {
+                  <span class="field-error"
+                    >Le mot de passe doit contenir :</span
+                  >
+                  <ul class="req-list">
+                    <li>Minimum 8 caractères</li>
+                    <li>Au moins 1 lettre majuscule</li>
+                    <li>Au moins 1 lettre minuscule</li>
+                    <li>Au moins 1 chiffre</li>
+                    <li>Au moins 1 caractère spécial (!&#64;#$%&...)</li>
+                  </ul>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Submit Button -->
+          <div class="btn-zone">
+            <div class="btn-glow"></div>
+            <button
+              type="submit"
+              class="submit-btn"
+              [disabled]="isLoading()"
+              [class.loading]="isLoading()"
+            >
+              <div class="sb-main">
+                <div class="sb-sheen"></div>
+                <div class="sb-ico">
+                  @if (isLoading()) {
+                    <div class="spinner"></div>
+                  } @else {
+                    <svg viewBox="0 0 24 24">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                  }
+                </div>
+                <div class="sb-copy">
+                  <span class="sb-label">{{
+                    isLoading() ? "Connexion..." : "Se Connecter"
+                  }}</span>
+                  <span class="sb-hint">{{
+                    isLoading()
+                      ? "Vérification en cours"
+                      : "Connexion sécurisée"
+                  }}</span>
+                </div>
+              </div>
+              <div class="sb-wing" [class.dimmed]="isLoading()">
+                <svg viewBox="0 0 24 24">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </div>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

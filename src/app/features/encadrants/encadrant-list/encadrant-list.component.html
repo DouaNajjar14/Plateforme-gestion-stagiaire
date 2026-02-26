@@ -1,0 +1,576 @@
+<div class="animate-fade-in">
+  <!-- Page Header Premium -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 p-6 bg-gradient-to-r from-red-50/50 to-white rounded-2xl border border-red-100/50">
+    <div class="flex items-center gap-4">
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center shadow-lg shadow-red-500/25">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" class="w-7 h-7">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-2xl font-extrabold text-gray-900 tracking-tight">Gestion des Encadrants</h1>
+        <p class="text-sm text-gray-500 mt-1">{{ filteredEncadrants().length }} encadrant(s) au total</p>
+      </div>
+    </div>
+    <button class="btn-ooredoo-red" (click)="openCreateModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="w-5 h-5">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      <span>Nouvel encadrant</span>
+    </button>
+  </div>
+
+  <!-- Search & Filters Bar Premium -->
+  <div class="mb-8 space-y-4">
+    <!-- Search Input -->
+    <div class="relative max-w-md">
+      <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="w-5 h-5 text-gray-400">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+      </div>
+      <input type="text" placeholder="Rechercher par nom, email ou spécialité..." [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()"
+        class="w-full pl-12 pr-4 py-3.5 bg-white border-2 border-gray-200 rounded-2xl text-sm text-gray-900 outline-none transition-all duration-300 focus:border-red-500 focus:shadow-lg focus:shadow-red-500/10 placeholder:text-gray-400"/>
+    </div>
+    
+    <!-- Filters Row -->
+    <div class="flex flex-wrap items-center gap-4">
+      <!-- Filter by Département -->
+      <div class="relative min-w-[220px]">
+        <select [(ngModel)]="filterDepartementId" (ngModelChange)="onFilterDepartementChange()"
+          class="w-full pl-12 pr-10 py-2.5 bg-white border-2 border-gray-200 rounded-xl text-sm text-gray-700 outline-none transition-all duration-300 focus:border-red-500 appearance-none cursor-pointer">
+          <option value="">Tous les départements</option>
+          @for (dept of departements(); track dept.id) {
+            <option [value]="dept.id">{{ dept.nom }}</option>
+          }
+        </select>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </div>
+      
+      <!-- Filter by Spécialité -->
+      <div class="relative min-w-[220px]">
+        <select [(ngModel)]="filterSpecialiteId" (ngModelChange)="onFilterSpecialiteChange()"
+          class="w-full pl-12 pr-10 py-2.5 bg-white border-2 border-gray-200 rounded-xl text-sm text-gray-700 outline-none transition-all duration-300 focus:border-red-500 appearance-none cursor-pointer">
+          <option value="">Toutes les spécialités</option>
+          @for (spec of filterSpecialiteOptions(); track spec.id) {
+            <option [value]="spec.id">{{ spec.nom }}</option>
+          }
+        </select>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+        </svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </div>
+      
+      <!-- Clear Filters Button -->
+      @if (searchTerm || filterDepartementId || filterSpecialiteId) {
+        <button (click)="clearFilters()" class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all duration-200 cursor-pointer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          Effacer les filtres
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Cards Grid -->
+  @if (isLoading()) {
+    <div class="flex flex-col items-center justify-center py-20 gap-4">
+      <div class="w-10 h-10 rounded-full border-[3px] border-gray-200 border-t-ooredoo-600 animate-spin"></div>
+      <span class="text-sm text-gray-500">Chargement des encadrants...</span>
+    </div>
+  } @else if (filteredEncadrants().length === 0) {
+    <div class="flex flex-col items-center justify-center py-20 text-center">
+      <div class="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="1.5" class="w-10 h-10">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+      </div>
+      <h3 class="text-lg font-semibold text-gray-900 mb-1">Aucun encadrant trouvé</h3>
+      <p class="text-sm text-gray-500 mb-5">{{ searchTerm ? 'Essayez de modifier votre recherche' : 'Commencez par créer un nouvel encadrant' }}</p>
+      @if (!searchTerm) {
+        <button class="btn-ooredoo-red text-sm" (click)="openCreateModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="w-4 h-4">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Créer un encadrant
+        </button>
+      }
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      @for (encadrant of filteredEncadrants(); track encadrant.id) {
+        <div class="encadrant-card cursor-pointer" [class.opacity-60]="!encadrant.actif" (click)="openDetailModal(encadrant)">
+          <!-- Card Header -->
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex items-center gap-4">
+              <!-- Avatar -->
+              <div class="encadrant-avatar">
+                {{ encadrant.prenom.charAt(0) }}{{ encadrant.nom.charAt(0) }}
+              </div>
+              <!-- Name & Department -->
+              <div>
+                <h3 class="text-base font-semibold text-gray-900">{{ encadrant.prenom }} {{ encadrant.nom }}</h3>
+                <p class="text-sm text-gray-500">{{ encadrant.departementNom || 'Non assigné' }}</p>
+              </div>
+            </div>
+            <!-- Actions -->
+            <div class="flex items-center gap-2" (click)="$event.stopPropagation()">
+              @if (encadrant.actif) {
+                <button title="Modifier" (click)="openEditModal(encadrant)" class="action-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-[18px] h-[18px]">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                </button>
+              }
+              <button [title]="encadrant.actif ? 'Supprimer' : 'Restaurer'" (click)="openArchiveConfirm(encadrant)" class="action-btn action-btn-delete">
+                @if (encadrant.actif) {
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-[18px] h-[18px]">
+                    <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  </svg>
+                } @else {
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-[18px] h-[18px]">
+                    <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                  </svg>
+                }
+              </button>
+            </div>
+          </div>
+
+          <!-- Card Content -->
+          <div class="space-y-3 mb-5">
+            <!-- Email -->
+            <div class="flex items-center gap-3 text-sm">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" class="w-[18px] h-[18px] flex-shrink-0">
+                <rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,6 12,13 2,6"/>
+              </svg>
+              <span class="text-gray-600">{{ encadrant.email }}</span>
+            </div>
+            <!-- Phone -->
+            <div class="flex items-center gap-3 text-sm">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" class="w-[18px] h-[18px] flex-shrink-0">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+              <span class="text-gray-600">{{ encadrant.tel || '+216 XX XXX XXX' }}</span>
+            </div>
+            <!-- Speciality -->
+            <div class="flex items-center gap-3 text-sm">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" class="w-[18px] h-[18px] flex-shrink-0">
+                <circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v10"/><path d="m4.22 4.22 4.24 4.24m7.08 7.08 4.24 4.24"/><path d="M1 12h6m6 0h10"/><path d="m4.22 19.78 4.24-4.24m7.08-7.08 4.24-4.24"/>
+              </svg>
+              <span class="text-gray-600">Spécialité: {{ encadrant.specialiteNom || 'Non définie' }}</span>
+            </div>
+            <!-- Competences -->
+            @if (encadrant.competences && encadrant.competences.length > 0) {
+              <div class="flex flex-wrap gap-1 mt-2">
+                @for (comp of encadrant.competences.slice(0, 3); track comp.id) {
+                  <span class="px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-xs font-medium">{{ comp.nom }}</span>
+                }
+                @if (encadrant.competences.length > 3) {
+                  <span class="px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">+{{ encadrant.competences.length - 3 }}</span>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Capacity Progress -->
+          <div class="pt-4 border-t border-gray-100">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm text-gray-500">Capacité</span>
+              <span class="text-sm font-semibold text-gray-900">{{ encadrant.capaciteActuelle }}/{{ encadrant.capaciteMax }}</span>
+            </div>
+            <div class="capacity-bar">
+              <div class="capacity-fill" [style.width.%]="getCapacityPercentage(encadrant)"></div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
+
+<!-- ═══════ CREATE/EDIT MODAL ═══════ -->
+@if (showModal()) {
+  <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1000] animate-overlay-in p-5" (click)="closeModal()">
+    <div class="bg-white rounded-2xl w-full max-w-[640px] shadow-modal animate-modal-in max-h-[90vh] flex flex-col" (click)="$event.stopPropagation()">
+      <div class="flex items-center justify-between p-6 pb-4">
+        <div class="flex items-center gap-3.5">
+          <div class="w-[42px] h-[42px] rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-lg font-bold text-gray-900">{{ modalMode === 'create' ? 'Nouvel Encadrant' : 'Modifier l\'Encadrant' }}</h2>
+            <p class="text-sm text-gray-500 mt-0.5">{{ modalMode === 'create' ? 'Créez un nouveau compte encadrant' : 'Modifiez les informations de l\'encadrant' }}</p>
+          </div>
+        </div>
+        <button (click)="closeModal()" class="w-9 h-9 rounded-lg border border-gray-200 bg-white flex items-center justify-center transition-all duration-200 hover:bg-red-50 hover:border-red-300 cursor-pointer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="w-[18px] h-[18px] text-gray-400">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="px-6 pb-6 overflow-y-auto flex-1 space-y-4">
+        @if (modalError()) {
+          <div class="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" class="w-[18px] h-[18px] flex-shrink-0">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span class="text-sm text-red-800">{{ modalError() }}</span>
+          </div>
+        }
+
+        <!-- Info personnelles -->
+        <div class="bg-gray-50 rounded-xl p-4">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3 flex items-center gap-2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+            Informations personnelles
+          </h3>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Prénom <span class="text-red-500">*</span></label>
+              <input type="text" class="modal-input" placeholder="Prénom" [(ngModel)]="formPrenom" maxlength="50"/>
+              <p class="text-xs text-gray-400 mt-1">Lettres uniquement, min. 2 caractères</p>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Nom <span class="text-red-500">*</span></label>
+              <input type="text" class="modal-input" placeholder="Nom de famille" [(ngModel)]="formNom" maxlength="50"/>
+              <p class="text-xs text-gray-400 mt-1">Lettres uniquement, min. 2 caractères</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Email <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none z-10">
+                <rect x="2" y="4" width="20" height="16" rx="3"/><polyline points="2,4 12,13 22,4"/>
+              </svg>
+              <input type="email" class="modal-input has-icon" placeholder="prenom.nom@ooredoo.tn" [(ngModel)]="formEmail"/>
+            </div>
+            <p class="text-xs text-gray-400 mt-1">Format requis : xxx&#64;ooredoo.tn</p>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Téléphone</label>
+            <div class="relative">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none z-10">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+              <input type="tel" class="modal-input has-icon" placeholder="+216 XX XXX XXX" [(ngModel)]="formTel"/>
+            </div>
+            <p class="text-xs text-gray-400 mt-1">Numéro tunisien (ex: +216 98 123 456)</p>
+          </div>
+        </div>
+
+        @if (modalMode === 'create') {
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Mot de passe <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none z-10">
+                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <input [type]="showPassword ? 'text' : 'password'" class="modal-input has-icon pr-11" placeholder="Mot de passe sécurisé" [(ngModel)]="formMotDePasse"/>
+              <button type="button" (click)="showPassword = !showPassword"
+                class="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-md text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors cursor-pointer">
+                @if (showPassword) {
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                    <path d="M17.94 17.94A10 10 0 0 1 12 20c-7 0-11-8-11-8a18.5 18.5 0 0 1 5.06-5.94"/><line x1="1" y1="1" x2="23" y2="23"/>
+                  </svg>
+                } @else {
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                  </svg>
+                }
+              </button>
+            </div>
+          </div>
+        }
+
+        <!-- Département -->
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Département <span class="text-red-500">*</span></label>
+          <div class="relative">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none z-10">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            <select class="modal-input has-icon appearance-none cursor-pointer" [(ngModel)]="formDepartementId" (ngModelChange)="onDepartementChange()">
+              <option value="" disabled>Sélectionner un département</option>
+              @for (dept of departements(); track dept.id) {
+                <option [value]="dept.id">{{ dept.nom }}</option>
+              }
+            </select>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Profil professionnel -->
+        <div class="bg-red-50 rounded-xl p-4">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-red-700 mb-3 flex items-center gap-2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+            Profil professionnel
+          </h3>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Spécialité <span class="text-red-500">*</span></label>
+              <div class="relative">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none z-10">
+                  <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                </svg>
+                <select class="modal-input has-icon appearance-none cursor-pointer" [(ngModel)]="formSpecialiteId" [disabled]="!formDepartementId" (ngModelChange)="onSpecialiteChange()">
+                  <option [ngValue]="null" disabled>{{ formDepartementId ? 'Sélectionner une spécialité' : 'Choisir d\'abord un département' }}</option>
+                  @for (spec of filteredSpecialites(); track spec.id) {
+                    <option [ngValue]="spec.id">{{ spec.nom }}</option>
+                  }
+                </select>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+              </div>
+              @if (filteredSpecialites().length === 0 && formDepartementId) {
+                <p class="text-xs text-amber-600 mt-1">Aucune spécialité disponible pour ce département</p>
+              }
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Compétences</label>
+              <div class="flex flex-wrap gap-2 p-3 bg-white rounded-lg border border-gray-200 min-h-[80px]">
+                @if (!formSpecialiteId) {
+                  <p class="text-xs text-gray-400 italic">Sélectionnez d'abord une spécialité</p>
+                } @else if (filteredCompetences().length === 0) {
+                  <p class="text-xs text-gray-400 italic">Aucune compétence disponible pour cette spécialité</p>
+                } @else {
+                  @for (comp of filteredCompetences(); track comp.id) {
+                    <button type="button" 
+                      (click)="toggleCompetence(comp.id)"
+                      class="px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
+                      [class]="isCompetenceSelected(comp.id) ? 'bg-red-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'">
+                      {{ comp.nom }}
+                      @if (isCompetenceSelected(comp.id)) {
+                        <span class="ml-1">✓</span>
+                      }
+                    </button>
+                  }
+                }
+              </div>
+              <p class="text-xs text-gray-400 mt-1">Cliquez pour sélectionner/désélectionner</p>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Capacité max <span class="text-red-500">*</span></label>
+              <input type="number" class="modal-input" min="1" max="20" placeholder="5" [(ngModel)]="formCapaciteMax"/>
+              <p class="text-xs text-gray-400 mt-1">Nombre maximum de stagiaires à encadrer</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100">
+        <button class="modal-btn-cancel" (click)="closeModal()">Annuler</button>
+        <button class="btn-ooredoo-red" (click)="saveModal()" [disabled]="isSaving()">
+          @if (isSaving()) {
+            <div class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+          }
+          <span>{{ modalMode === 'create' ? 'Créer' : 'Enregistrer' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ═══════ CONFIRM DIALOG ═══════ -->
+@if (showConfirm()) {
+  <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1000] animate-overlay-in p-5" (click)="closeConfirm()">
+    <div class="bg-white rounded-2xl max-w-[420px] w-full shadow-modal animate-modal-in text-center p-8" (click)="$event.stopPropagation()">
+      <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5"
+        [class]="!confirmEncadrant?.actif ? 'bg-emerald-50' : 'bg-red-50'">
+        @if (!confirmEncadrant?.actif) {
+          <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
+            <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+          </svg>
+        } @else {
+          <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
+            <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+        }
+      </div>
+      <h3 class="text-lg font-bold text-gray-900 mb-2">{{ confirmEncadrant?.actif ? 'Supprimer' : 'Restaurer' }} cet encadrant ?</h3>
+      <p class="text-sm text-gray-500 leading-relaxed mb-6">
+        {{ confirmEncadrant?.actif
+          ? 'L\'encadrant "' + confirmEncadrant?.prenom + ' ' + confirmEncadrant?.nom + '" sera supprimé et ne pourra plus superviser de stagiaires.'
+          : 'L\'encadrant "' + confirmEncadrant?.prenom + ' ' + confirmEncadrant?.nom + '" sera réactivé et pourra à nouveau superviser des stagiaires.'
+        }}
+      </p>
+      <div class="flex gap-3 justify-center">
+        <button class="modal-btn-cancel" (click)="closeConfirm()">Annuler</button>
+        <button (click)="confirmArchive()"
+          [class]="!confirmEncadrant?.actif ? 'confirm-btn-success' : 'confirm-btn-danger'">
+          {{ confirmEncadrant?.actif ? 'Supprimer' : 'Restaurer' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ═══════ DETAIL MODAL ═══════ -->
+@if (showDetail()) {
+  <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1000] animate-overlay-in p-5" (click)="closeDetailModal()">
+    <div class="bg-white rounded-2xl max-w-[520px] w-full shadow-modal animate-modal-in overflow-hidden" (click)="$event.stopPropagation()">
+      <!-- Header avec fond coloré -->
+      <div class="relative bg-gradient-to-br from-[#D90012] via-[#B8000F] to-[#8B000B] p-6 text-white">
+        <div class="absolute inset-0 opacity-10">
+          <div class="absolute top-4 right-4 w-32 h-32 rounded-full bg-white/20 blur-2xl"></div>
+          <div class="absolute bottom-4 left-4 w-24 h-24 rounded-full bg-white/10 blur-xl"></div>
+        </div>
+        <div class="relative flex items-center gap-4">
+          <div class="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-xl font-bold shadow-lg">
+            {{ selectedEncadrant?.prenom?.charAt(0) }}{{ selectedEncadrant?.nom?.charAt(0) }}
+          </div>
+          <div>
+            <h2 class="text-xl font-bold">{{ selectedEncadrant?.prenom }} {{ selectedEncadrant?.nom }}</h2>
+            <p class="text-white/80 text-sm">{{ selectedEncadrant?.departementNom || 'Non assigné' }}</p>
+            <span class="inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-full text-xs font-semibold"
+              [class]="selectedEncadrant?.actif ? 'bg-emerald-500/20 text-emerald-100' : 'bg-red-200/30 text-red-100'">
+              <span class="w-1.5 h-1.5 rounded-full" [class]="selectedEncadrant?.actif ? 'bg-emerald-400' : 'bg-red-300'"></span>
+              {{ selectedEncadrant?.actif ? 'Actif' : 'Archivé' }}
+            </span>
+          </div>
+        </div>
+        <button (click)="closeDetailModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition-colors cursor-pointer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Contenu -->
+      <div class="p-6 space-y-5">
+        <!-- Contact -->
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Contact</h4>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
+              <div class="w-9 h-9 rounded-lg bg-red-100 flex items-center justify-center">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" class="w-4 h-4">
+                  <rect x="2" y="4" width="20" height="16" rx="3"/><polyline points="2,4 12,13 22,4"/>
+                </svg>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs text-gray-400">Email</p>
+                <p class="text-sm font-medium text-gray-900 truncate">{{ selectedEncadrant?.email }}</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
+              <div class="w-9 h-9 rounded-lg bg-red-100 flex items-center justify-center">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" class="w-4 h-4">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs text-gray-400">Téléphone</p>
+                <p class="text-sm font-medium text-gray-900">{{ selectedEncadrant?.tel || 'Non renseigné' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profil professionnel -->
+        <div class="bg-red-50/50 rounded-xl p-4">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-red-700 mb-3">Profil professionnel</h4>
+          <div class="space-y-3">
+            <div>
+              <p class="text-xs text-gray-400 mb-1">Spécialité</p>
+              <p class="text-sm font-semibold text-gray-900">{{ selectedEncadrant?.specialiteNom || 'Non renseignée' }}</p>
+            </div>
+            @if (selectedEncadrant && selectedEncadrant.competences && selectedEncadrant.competences.length > 0) {
+              <div>
+                <p class="text-xs text-gray-400 mb-2">Compétences</p>
+                <div class="flex flex-wrap gap-1.5">
+                  @for (comp of selectedEncadrant.competences; track comp.id) {
+                    <span class="px-2.5 py-1 bg-white rounded-lg text-xs font-medium text-gray-700 border border-gray-200 shadow-sm">
+                      {{ comp.nom }}
+                    </span>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Capacité -->
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Capacité d'encadrement</h4>
+          <div class="bg-gray-50 rounded-xl p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-medium text-gray-700">Stagiaires encadrés</span>
+              <span class="text-sm font-bold text-gray-900">{{ selectedEncadrant?.capaciteActuelle || 0 }} / {{ selectedEncadrant?.capaciteMax }}</span>
+            </div>
+            <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
+              <div class="h-full rounded-full transition-all duration-500"
+                [class]="((selectedEncadrant?.capaciteActuelle || 0) / (selectedEncadrant?.capaciteMax || 1)) >= 1 ? 'bg-red-500' : ((selectedEncadrant?.capaciteActuelle || 0) / (selectedEncadrant?.capaciteMax || 1)) >= 0.7 ? 'bg-amber-500' : 'bg-emerald-500'"
+                [style.width.%]="((selectedEncadrant?.capaciteActuelle || 0) / (selectedEncadrant?.capaciteMax || 1)) * 100">
+              </div>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">
+              @if (((selectedEncadrant?.capaciteActuelle || 0) / (selectedEncadrant?.capaciteMax || 1)) >= 1) {
+                Capacité maximale atteinte
+              } @else {
+                {{ (selectedEncadrant?.capaciteMax || 0) - (selectedEncadrant?.capaciteActuelle || 0) }} place(s) disponible(s)
+              }
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100">
+        <button class="modal-btn-cancel" (click)="closeDetailModal()">Fermer</button>
+        @if (selectedEncadrant?.actif) {
+          <button class="btn-ooredoo-red" (click)="editFromDetail()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            <span>Modifier</span>
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ═══════ TOAST ═══════ -->
+@if (toastMessage()) {
+  <div class="fixed bottom-8 right-8 flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-lg z-[2000] animate-toast-in text-sm font-semibold"
+    [class]="toastType() === 'success' ? 'bg-emerald-50 border border-emerald-200 text-emerald-800' : 'bg-red-50 border border-red-200 text-red-800'">
+    <div>
+      @if (toastType() === 'success') {
+        <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" class="w-5 h-5">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      } @else {
+        <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2.5" class="w-5 h-5">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      }
+    </div>
+    <span>{{ toastMessage() }}</span>
+  </div>
+}

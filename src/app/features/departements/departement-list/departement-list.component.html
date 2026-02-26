@@ -1,0 +1,250 @@
+<div class="animate-fade-in">
+  <!-- Page Header Premium -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 p-6 bg-gradient-to-r from-red-50/50 to-white rounded-2xl border border-red-100/50">
+    <div class="flex items-center gap-4">
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center shadow-lg shadow-red-500/25">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" class="w-7 h-7">
+          <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-2xl font-extrabold text-gray-900 tracking-tight">Gestion des Départements</h1>
+        <p class="text-sm text-gray-500 mt-1">{{ filteredDepartements().length }} département(s) • {{ totalEncadrants }} encadrant(s) • {{ totalStagiaires }} stagiaire(s)</p>
+      </div>
+    </div>
+    <button class="btn-ooredoo-red" (click)="openCreateModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="w-5 h-5">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      <span>Nouveau département</span>
+    </button>
+  </div>
+
+  <!-- Search Bar Premium -->
+  <div class="mb-8">
+    <div class="relative max-w-md">
+      <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="w-5 h-5 text-gray-400">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+      </div>
+      <input type="text" placeholder="Rechercher un département..." [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()"
+        class="w-full pl-12 pr-4 py-3.5 bg-white border-2 border-gray-200 rounded-2xl text-sm text-gray-900 outline-none transition-all duration-300 focus:border-red-500 focus:shadow-lg focus:shadow-red-500/10 placeholder:text-gray-400"/>
+    </div>
+  </div>
+
+  <!-- Cards Grid -->
+  @if (isLoading()) {
+    <div class="flex flex-col items-center justify-center py-20 gap-4">
+      <div class="w-10 h-10 rounded-full border-[3px] border-gray-200 border-t-ooredoo-600 animate-spin"></div>
+      <span class="text-sm text-gray-500">Chargement des départements...</span>
+    </div>
+  } @else if (filteredDepartements().length === 0) {
+    <div class="flex flex-col items-center justify-center py-20 text-center">
+      <div class="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="1.5" class="w-10 h-10">
+          <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/>
+        </svg>
+      </div>
+      <h3 class="text-lg font-semibold text-gray-900 mb-1">Aucun département trouvé</h3>
+      <p class="text-sm text-gray-500 mb-5">{{ searchTerm ? 'Essayez de modifier votre recherche' : 'Commencez par créer un nouveau département' }}</p>
+      @if (!searchTerm) {
+        <button class="btn-ooredoo-red text-sm" (click)="openCreateModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="w-4 h-4">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Créer un département
+        </button>
+      }
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      @for (dept of filteredDepartements(); track dept.id) {
+        <div class="dept-card" [class.opacity-60]="dept.archive">
+          <!-- Card Header -->
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex items-center gap-4">
+              <!-- Icon -->
+              <div class="dept-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" class="w-6 h-6">
+                  <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01"/>
+                </svg>
+              </div>
+              <!-- Name & Responsable -->
+              <div>
+                <h3 class="text-base font-semibold text-gray-900">{{ dept.nom }}</h3>
+                <p class="text-sm text-gray-500">{{ dept.responsable ? 'Responsable : ' + dept.responsable : 'Aucun responsable' }}</p>
+              </div>
+            </div>
+            <!-- Actions -->
+            <div class="flex items-center gap-2">
+              @if (!dept.archive) {
+                <button title="Modifier" (click)="openEditModal(dept)" class="action-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-[18px] h-[18px]">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                </button>
+              }
+              <button [title]="dept.archive ? 'Restaurer' : 'Supprimer'" (click)="openArchiveConfirm(dept)" class="action-btn action-btn-delete">
+                @if (dept.archive) {
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-[18px] h-[18px]">
+                    <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                  </svg>
+                } @else {
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-[18px] h-[18px]">
+                    <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  </svg>
+                }
+              </button>
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div class="grid grid-cols-2 gap-4 mb-5">
+            <div class="stat-box">
+              <span class="stat-value">{{ dept.nombreStagiairesActuel || 0 }}</span>
+              <span class="stat-label">Stagiaires</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-value">{{ dept.nombreEncadrantsActuel || 0 }}</span>
+              <span class="stat-label">Encadrants</span>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="pt-4 border-t border-gray-100">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm text-gray-500">Occupation</span>
+              <span class="text-sm font-semibold text-gray-900">{{ dept.nombreStagiairesActuel || 0 }} stagiaire(s)</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" [style.width.%]="dept.nombreStagiairesActuel > 0 ? 100 : 0"></div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Add New Card -->
+      <div class="add-card" (click)="openCreateModal()">
+        <div class="add-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-8 h-8">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </div>
+        <span class="text-sm text-gray-400 mt-2">Ajouter un département</span>
+      </div>
+    </div>
+  }
+<!-- ═══════ CREATE/EDIT MODAL ═══════ -->
+@if (showModal()) {
+  <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1000] animate-overlay-in p-5" (click)="closeModal()">
+    <div class="bg-white rounded-2xl w-full max-w-[520px] shadow-modal animate-modal-in" (click)="$event.stopPropagation()">
+      <div class="flex items-center justify-between p-6 pb-4">
+        <div class="flex items-center gap-3.5">
+          <div class="w-[42px] h-[42px] rounded-xl bg-ooredoo-600/[0.06] flex items-center justify-center flex-shrink-0">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+              <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-lg font-extrabold text-brand-text">{{ modalMode === 'create' ? 'Nouveau Département' : 'Modifier le Département' }}</h2>
+            <p class="text-[0.8125rem] text-brand-muted mt-0.5">{{ modalMode === 'create' ? 'Ajoutez un nouveau département à votre organisation' : 'Modifiez les informations du département' }}</p>
+          </div>
+        </div>
+        <button (click)="closeModal()" class="w-9 h-9 rounded-[10px] border border-brand-border bg-white flex items-center justify-center transition-all duration-200 hover:bg-red-50 hover:border-ooredoo-600 cursor-pointer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="w-[18px] h-[18px] text-brand-muted">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="px-6 pb-6">
+        @if (modalError()) {
+          <div class="flex items-center gap-2 p-3 mb-4 bg-red-50 border border-red-200 rounded-[10px]">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" class="w-[18px] h-[18px] flex-shrink-0">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span class="text-[0.8125rem] text-ooredoo-800">{{ modalError() }}</span>
+          </div>
+        }
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-[0.08em] text-brand-muted mb-2">Nom du département</label>
+            <input type="text" class="form-ooredoo" placeholder="Ex: Direction des Ressources Humaines"
+              [(ngModel)]="departementNom" (keyup.enter)="saveModal()" autofocus/>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-[0.08em] text-brand-muted mb-2">Responsable</label>
+            <input type="text" class="form-ooredoo" placeholder="Ex: Ahmed Ben Ali"
+              [(ngModel)]="departementResponsable"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 px-6 pb-6">
+        <button class="btn-cancel" (click)="closeModal()">Annuler</button>
+        <button class="btn-ooredoo" (click)="saveModal()" [disabled]="isSaving()">
+          @if (isSaving()) {
+            <div class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+          }
+          <span>{{ modalMode === 'create' ? 'Créer' : 'Enregistrer' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ═══════ CONFIRM DIALOG ═══════ -->
+@if (showDeleteConfirm()) {
+  <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1000] animate-overlay-in p-5" (click)="closeDeleteConfirm()">
+    <div class="bg-white rounded-2xl max-w-[420px] w-full shadow-modal animate-modal-in text-center p-8" (click)="$event.stopPropagation()">
+      <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5"
+        [class]="deletingDepartement?.archive ? 'bg-emerald-50' : 'bg-amber-50'">
+        @if (deletingDepartement?.archive) {
+          <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
+            <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+          </svg>
+        } @else {
+          <svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
+            <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/>
+          </svg>
+        }
+      </div>
+      <h3 class="text-lg font-extrabold text-brand-text mb-2">{{ deletingDepartement?.archive ? 'Désarchiver' : 'Archiver' }} ce département ?</h3>
+      <p class="text-sm text-brand-muted leading-relaxed mb-6">
+        {{ deletingDepartement?.archive
+          ? 'Le département "' + deletingDepartement?.nom + '" sera réactivé et visible dans la liste des départements actifs.'
+          : 'Le département "' + deletingDepartement?.nom + '" sera archivé et ne sera plus visible dans la liste active.'
+        }}
+      </p>
+      <div class="flex gap-3 justify-center">
+        <button class="btn-cancel" (click)="closeDeleteConfirm()">Annuler</button>
+        <button (click)="confirmArchive()"
+          [class]="deletingDepartement?.archive ? 'btn-ooredoo btn-success' : 'btn-ooredoo'">
+          {{ deletingDepartement?.archive ? 'Désarchiver' : 'Archiver' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ═══════ TOAST ═══════ -->
+@if (toastMessage()) {
+  <div class="fixed bottom-8 right-8 flex items-center gap-3 px-5 py-3.5 rounded-[14px] shadow-toast z-[2000] animate-toast-in text-sm font-semibold"
+    [class]="toastType() === 'success' ? 'bg-emerald-50 border border-emerald-200 text-emerald-800' : 'bg-red-50 border border-red-200 text-ooredoo-800'">
+    <div>
+      @if (toastType() === 'success') {
+        <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" class="w-5 h-5">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      } @else {
+        <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2.5" class="w-5 h-5">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      }
+    </div>
+    <span>{{ toastMessage() }}</span>
+  </div>
+}

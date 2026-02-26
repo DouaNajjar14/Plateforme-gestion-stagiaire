@@ -1,0 +1,5 @@
+/* Layout - Tailwind handles all styling. Only host display needed. */
+:host {
+  display: block;
+  height: 100%;
+}
