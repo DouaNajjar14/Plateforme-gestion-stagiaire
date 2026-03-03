@@ -16,7 +16,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/admin/departements")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
+
 public class DepartementController {
 
     private final DepartementService departementService;

@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -34,6 +35,11 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
+                        // Lecture seule autorisée pour AGENT_RH
+                        .requestMatchers(HttpMethod.GET, "/api/admin/departements", "/api/admin/departements/**")
+                        .hasAnyRole("ADMIN", "AGENT_RH")
+                        .requestMatchers(HttpMethod.GET, "/api/admin/specialites", "/api/admin/specialites/**")
+                        .hasAnyRole("ADMIN", "AGENT_RH")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/agent-rh/**").hasAnyRole("ADMIN", "AGENT_RH")
                         .requestMatchers("/api/encadrant/**").hasAnyRole("ADMIN", "ENCADRANT")

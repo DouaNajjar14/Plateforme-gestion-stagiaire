@@ -16,18 +16,19 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/admin/specialites")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
 public class SpecialiteController {
 
     private final SpecialiteService specialiteService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SpecialiteResponse> creer(@Valid @RequestBody SpecialiteRequest request) {
         SpecialiteResponse response = specialiteService.creer(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SpecialiteResponse> modifier(
             @PathVariable Long id,
             @Valid @RequestBody SpecialiteRequest request) {
@@ -36,22 +37,26 @@ public class SpecialiteController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> supprimer(@PathVariable Long id) {
         specialiteService.supprimer(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'AGENT_RH')")
     public ResponseEntity<List<SpecialiteResponse>> lister() {
         return ResponseEntity.ok(specialiteService.listerToutes());
     }
 
     @GetMapping("/departement/{departementId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'AGENT_RH')")
     public ResponseEntity<List<SpecialiteResponse>> listerParDepartement(@PathVariable UUID departementId) {
         return ResponseEntity.ok(specialiteService.listerParDepartement(departementId));
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'AGENT_RH')")
     public ResponseEntity<SpecialiteResponse> trouverParId(@PathVariable Long id) {
         return ResponseEntity.ok(specialiteService.trouverParId(id));
     }
