@@ -1,0 +1,8 @@
+:host {
+  display: block;
+}
+
+.field-invalid {
+  border-color: #D90012 !important;
+  background-color: rgba(254, 242, 242, 0.5) !important;
+}

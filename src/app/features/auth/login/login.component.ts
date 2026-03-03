@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { Role } from '../../../core/models/auth.model';
 
 @Component({
   selector: 'app-login',
@@ -47,7 +48,12 @@ export class LoginComponent {
     this.authService.login(this.loginForm.value).subscribe({
       next: () => {
         this.isLoading.set(false);
-        this.router.navigate(['/dashboard']);
+        const user = this.authService.currentUser();
+        if (user?.role === Role.AGENT_RH) {
+          this.router.navigate(['/agent-rh/dashboard']);
+        } else {
+          this.router.navigate(['/admin/dashboard']);
+        }
       },
       error: (error) => {
         this.isLoading.set(false);

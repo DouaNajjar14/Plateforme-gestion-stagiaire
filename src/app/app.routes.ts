@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { guestGuard, authGuard, adminGuard } from './core/guards/auth.guard';
+import { guestGuard, authGuard, adminGuard, agentRhGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -37,10 +37,26 @@ export const routes: Routes = [
       {
         path: 'encadrants',
         loadComponent: () => import('./features/encadrants/encadrant-list/encadrant-list.component').then(m => m.EncadrantListComponent)
+      }
+    ]
+  },
+  {
+    path: 'agent-rh',
+    loadComponent: () => import('./shared/components/agent-rh-layout/agent-rh-layout.component').then(m => m.AgentRhLayoutComponent),
+    canActivate: [authGuard, agentRhGuard],
+    children: [
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
+      },
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./features/agent-rh/dashboard/agent-rh-dashboard.component').then(m => m.AgentRhDashboardComponent)
       },
       {
         path: 'sujets-pfe',
-        loadComponent: () => import('./features/sujets-pfe/sujet-pfe-list/sujet-pfe-list.component').then(m => m.SujetPfeListComponent)
+        loadComponent: () => import('./features/agent-rh/sujets-pfe/agent-rh-sujet-pfe.component').then(m => m.AgentRhSujetPfeComponent)
       }
     ]
   },

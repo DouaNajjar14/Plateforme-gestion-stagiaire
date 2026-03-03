@@ -4,10 +4,10 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { DepartementService } from '../../core/services/departement.service';
 import { AgentRHService } from '../../core/services/agent-rh.service';
-import { SujetPfeService } from '../../core/services/sujet-pfe.service';
-import { Statut, Page, SujetPfe } from '../../core/models/sujet-pfe.model';
+import { EncadrantService } from '../../core/services/encadrant.service';
 import { Departement } from '../../core/models/departement.model';
 import { AgentRH } from '../../core/models/agent-rh.model';
+import { Encadrant } from '../../core/models/encadrant.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,15 +19,14 @@ import { AgentRH } from '../../core/models/agent-rh.model';
 export class DashboardComponent implements OnInit {
   totalDepartements = signal(0);
   totalAgentsRH = signal(0);
-  totalSujets = signal(0);
-  sujetsOuverts = signal(0);
+  totalEncadrants = signal(0);
   userName = '';
 
   constructor(
     public authService: AuthService,
     private departementService: DepartementService,
     private agentRHService: AgentRHService,
-    private sujetPfeService: SujetPfeService
+    private encadrantService: EncadrantService
   ) {}
 
   ngOnInit(): void {
@@ -43,12 +42,8 @@ export class DashboardComponent implements OnInit {
     this.agentRHService.listerActifs().subscribe({
       next: (list: AgentRH[]) => this.totalAgentsRH.set(list.length)
     });
-    this.sujetPfeService.listerActifs(0, 1).subscribe({
-      next: (page: Page<SujetPfe>) => this.totalSujets.set(page.totalElements)
-    });
-    this.sujetPfeService.rechercher(Statut.OUVERT, undefined, undefined, 0, 1).subscribe({
-      next: (page: Page<SujetPfe>) => this.sujetsOuverts.set(page.totalElements)
+    this.encadrantService.listerActifs().subscribe({
+      next: (list: Encadrant[]) => this.totalEncadrants.set(list.length)
     });
   }
 }
-""

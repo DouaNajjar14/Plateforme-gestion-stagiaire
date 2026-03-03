@@ -35,6 +35,9 @@ export class AgentRhListComponent implements OnInit {
   formTel = '';
   formMotDePasse = '';
 
+  // Validation touched state
+  formTouched: Record<string, boolean> = {};
+
   // Toast
   toastMessage = signal<string | null>(null);
   toastType = signal<'success' | 'error'>('success');
@@ -118,11 +121,102 @@ export class AgentRhListComponent implements OnInit {
     this.formTel = '';
     this.formMotDePasse = '';
     this.showPassword = false;
+    this.formTouched = {};
+  }
+
+  touchField(field: string): void {
+    this.formTouched[field] = true;
+  }
+
+  markAllTouched(): void {
+    ['nom', 'prenom', 'email', 'tel', 'motDePasse'].forEach(f => this.formTouched[f] = true);
+  }
+
+  isValidEmail(email: string): boolean {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  isValidTel(tel: string): boolean {
+    // +216 suivi d'un préfixe 20-29, 50-59 ou 90-98, puis 3+3 chiffres
+    return /^\+216 (2[0-9]|5[0-9]|9[0-8]) \d{3} \d{3}$/.test(tel.trim());
+  }
+
+  isFieldInvalid(field: string): boolean {
+    if (!this.formTouched[field]) return false;
+    return !!this.getFieldError(field);
+  }
+
+  getFieldError(field: string): string | null {
+    if (!this.formTouched[field]) return null;
+    switch (field) {
+      case 'nom':
+        if (!this.formNom.trim()) return 'Le nom est obligatoire';
+        if (this.formNom.trim().length < 2) return 'Le nom doit contenir au moins 2 caractères';
+        if (this.formNom.trim().length > 50) return 'Le nom ne doit pas dépasser 50 caractères';
+        return null;
+      case 'prenom':
+        if (!this.formPrenom.trim()) return 'Le prénom est obligatoire';
+        if (this.formPrenom.trim().length < 2) return 'Le prénom doit contenir au moins 2 caractères';
+        if (this.formPrenom.trim().length > 50) return 'Le prénom ne doit pas dépasser 50 caractères';
+        return null;
+      case 'email':
+        if (!this.formEmail.trim()) return 'L\'email est obligatoire';
+        if (!this.isValidEmail(this.formEmail.trim())) return 'Format d\'email invalide (ex: nom@domaine.tn)';
+        return null;
+      case 'tel':
+        if (this.formTel.trim() && !this.isValidTel(this.formTel)) return 'Format attendu : +216 XX XXX XXX (préfixe 2X, 5X ou 9X)';
+        return null;
+      case 'motDePasse':
+        if (this.modalMode !== 'create') return null;
+        if (!this.formMotDePasse) return 'Le mot de passe est obligatoire';
+        if (this.formMotDePasse.length < 8) return 'Minimum 8 caractères requis';
+        if (!/[A-Z]/.test(this.formMotDePasse)) return 'Au moins une lettre majuscule requise';
+        if (!/[0-9]/.test(this.formMotDePasse)) return 'Au moins un chiffre requis';
+        if (!/[^A-Za-z0-9]/.test(this.formMotDePasse)) return 'Au moins un symbole requis (!@#$%...)';
+        return null;
+      default:
+        return null;
+    }
+  }
+
+  hasFormErrors(): boolean {
+    const fields = this.modalMode === 'create'
+      ? ['nom', 'prenom', 'email', 'tel', 'motDePasse']
+      : ['nom', 'prenom', 'email', 'tel'];
+    return fields.some(f => !!this.getFieldError(f));
+  }
+
+  getPasswordStrength(): 'weak' | 'medium' | 'strong' {
+    const p = this.formMotDePasse;
+    const hasUpper = /[A-Z]/.test(p);
+    const hasDigit = /[0-9]/.test(p);
+    const hasSymbol = /[^A-Za-z0-9]/.test(p);
+    const hasLength = p.length >= 8;
+    const criteria = [hasLength, hasUpper, hasDigit, hasSymbol].filter(Boolean).length;
+    if (criteria === 4) return 'strong';
+    if (criteria >= 2) return 'medium';
+    return 'weak';
+  }
+
+  getPasswordStrengthLabel(): string {
+    const s = this.getPasswordStrength();
+    return s === 'strong' ? 'Fort' : s === 'medium' ? 'Moyen' : 'Faible';
+  }
+
+  passwordCriteria() {
+    const p = this.formMotDePasse;
+    return {
+      length: p.length >= 8,
+      upper: /[A-Z]/.test(p),
+      digit: /[0-9]/.test(p),
+      symbol: /[^A-Za-z0-9]/.test(p)
+    };
   }
 
   saveModal(): void {
-    if (!this.formNom.trim() || !this.formPrenom.trim() || !this.formEmail.trim()) {
-      this.modalError.set('Veuillez remplir tous les champs obligatoires');
+    this.markAllTouched();
+    if (this.hasFormErrors()) {
+      this.modalError.set('Veuillez corriger les erreurs dans le formulaire');
       return;
     }
 
@@ -131,6 +225,7 @@ export class AgentRhListComponent implements OnInit {
 
     if (this.modalMode === 'create') {
       if (!this.formMotDePasse.trim()) {
+        this.formTouched['motDePasse'] = true;
         this.modalError.set('Le mot de passe est obligatoire');
         this.isSaving.set(false);
         return;

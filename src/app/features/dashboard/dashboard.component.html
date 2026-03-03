@@ -1,115 +1,251 @@
 <div class="animate-fade-in space-y-7">
   <!-- Welcome Banner -->
-  <div class="relative bg-gradient-to-br from-ooredoo-500 via-ooredoo-600 to-ooredoo-900 rounded-2xl px-8 py-9 text-white overflow-hidden">
+  <div
+    class="relative bg-gradient-to-br from-ooredoo-500 via-ooredoo-600 to-ooredoo-900 rounded-2xl px-8 py-9 text-white overflow-hidden"
+  >
     <div class="relative z-10">
-      <h1 class="text-[1.65rem] font-extrabold mb-1.5">Bienvenue sur votre espace</h1>
-      <p class="text-white/75 text-sm">Tableau de bord de gestion des stages — Ooredoo Tunisie</p>
+      <h1 class="text-[1.65rem] font-extrabold mb-1.5">
+        Bienvenue sur votre espace
+      </h1>
+      <p class="text-white/75 text-sm">
+        Tableau de bord de gestion des stages — Ooredoo Tunisie
+      </p>
     </div>
     <!-- Decoration -->
-    <div class="absolute -top-6 -right-6 w-36 h-36 border border-white/10 rounded-full"></div>
-    <div class="absolute -bottom-10 right-20 w-24 h-24 bg-white/5 rounded-full"></div>
-    <svg class="absolute right-3 top-3 w-28 h-28 opacity-10" viewBox="0 0 100 100" fill="none">
-      <circle cx="50" cy="50" r="45" stroke="white" stroke-width="2"/>
-      <text x="50" y="60" text-anchor="middle" fill="white" font-size="28" font-weight="bold" font-family="sans-serif">O</text>
+    <div
+      class="absolute -top-6 -right-6 w-36 h-36 border border-white/10 rounded-full"
+    ></div>
+    <div
+      class="absolute -bottom-10 right-20 w-24 h-24 bg-white/5 rounded-full"
+    ></div>
+    <svg
+      class="absolute right-3 top-3 w-28 h-28 opacity-10"
+      viewBox="0 0 100 100"
+      fill="none"
+    >
+      <circle cx="50" cy="50" r="45" stroke="white" stroke-width="2" />
+      <text
+        x="50"
+        y="60"
+        text-anchor="middle"
+        fill="white"
+        font-size="28"
+        font-weight="bold"
+        font-family="sans-serif"
+      >
+        O
+      </text>
     </svg>
   </div>
 
   <!-- Stats Grid -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
     <!-- Departements -->
-    <a routerLink="/admin/departements" class="group card-ooredoo flex items-center gap-4 p-5 hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 cursor-pointer no-underline">
-      <div class="w-[52px] h-[52px] rounded-[14px] flex items-center justify-center flex-shrink-0 bg-ooredoo-600/[0.08]">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
-          <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01"/>
+    <a
+      routerLink="/admin/departements"
+      class="group card-ooredoo flex items-center gap-4 p-5 hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 cursor-pointer no-underline"
+    >
+      <div
+        class="w-[52px] h-[52px] rounded-[14px] flex items-center justify-center flex-shrink-0 bg-ooredoo-600/[0.08]"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#D90012"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="w-6 h-6"
+        >
+          <rect x="4" y="2" width="16" height="20" rx="2" />
+          <path d="M9 22v-4h6v4" />
+          <path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01" />
         </svg>
       </div>
       <div class="flex-1 min-w-0">
-        <span class="block text-[1.75rem] font-extrabold text-brand-text leading-none">{{ totalDepartements() }}</span>
-        <span class="block text-[0.82rem] text-brand-muted mt-1">Départements</span>
+        <span
+          class="block text-[1.75rem] font-extrabold text-brand-text leading-none"
+          >{{ totalDepartements() }}</span
+        >
+        <span class="block text-[0.82rem] text-brand-muted mt-1"
+          >Départements</span
+        >
       </div>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5 text-brand-light group-hover:text-ooredoo-600 transition-colors">
-        <polyline points="9 18 15 12 9 6"/>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        class="w-5 h-5 text-brand-light group-hover:text-ooredoo-600 transition-colors"
+      >
+        <polyline points="9 18 15 12 9 6" />
       </svg>
     </a>
 
     <!-- Agents RH -->
-    <a routerLink="/admin/agents-rh" class="group card-ooredoo flex items-center gap-4 p-5 hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 cursor-pointer no-underline">
-      <div class="w-[52px] h-[52px] rounded-[14px] flex items-center justify-center flex-shrink-0 bg-blue-500/[0.08]">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+    <a
+      routerLink="/admin/agents-rh"
+      class="group card-ooredoo flex items-center gap-4 p-5 hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 cursor-pointer no-underline"
+    >
+      <div
+        class="w-[52px] h-[52px] rounded-[14px] flex items-center justify-center flex-shrink-0 bg-blue-500/[0.08]"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#3B82F6"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="w-6 h-6"
+        >
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
         </svg>
       </div>
       <div class="flex-1 min-w-0">
-        <span class="block text-[1.75rem] font-extrabold text-brand-text leading-none">{{ totalAgentsRH() }}</span>
-        <span class="block text-[0.82rem] text-brand-muted mt-1">Agents RH</span>
+        <span
+          class="block text-[1.75rem] font-extrabold text-brand-text leading-none"
+          >{{ totalAgentsRH() }}</span
+        >
+        <span class="block text-[0.82rem] text-brand-muted mt-1"
+          >Agents RH</span
+        >
       </div>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5 text-brand-light group-hover:text-ooredoo-600 transition-colors">
-        <polyline points="9 18 15 12 9 6"/>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        class="w-5 h-5 text-brand-light group-hover:text-ooredoo-600 transition-colors"
+      >
+        <polyline points="9 18 15 12 9 6" />
       </svg>
     </a>
 
-    <!-- Sujets PFE -->
-    <a routerLink="/admin/sujets-pfe" class="group card-ooredoo flex items-center gap-4 p-5 hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 cursor-pointer no-underline">
-      <div class="w-[52px] h-[52px] rounded-[14px] flex items-center justify-center flex-shrink-0 bg-violet-500/[0.08]">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
-          <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+    <!-- Encadrants -->
+    <a
+      routerLink="/admin/encadrants"
+      class="group card-ooredoo flex items-center gap-4 p-5 hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 cursor-pointer no-underline"
+    >
+      <div
+        class="w-[52px] h-[52px] rounded-[14px] flex items-center justify-center flex-shrink-0 bg-violet-500/[0.08]"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#8B5CF6"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="w-6 h-6"
+        >
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+          <path d="M12 14l-2 4h4l-2-4" />
         </svg>
       </div>
       <div class="flex-1 min-w-0">
-        <span class="block text-[1.75rem] font-extrabold text-brand-text leading-none">{{ totalSujets() }}</span>
-        <span class="block text-[0.82rem] text-brand-muted mt-1">Sujets PFE</span>
+        <span
+          class="block text-[1.75rem] font-extrabold text-brand-text leading-none"
+          >{{ totalEncadrants() }}</span
+        >
+        <span class="block text-[0.82rem] text-brand-muted mt-1"
+          >Encadrants</span
+        >
       </div>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5 text-brand-light group-hover:text-ooredoo-600 transition-colors">
-        <polyline points="9 18 15 12 9 6"/>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        class="w-5 h-5 text-brand-light group-hover:text-ooredoo-600 transition-colors"
+      >
+        <polyline points="9 18 15 12 9 6" />
       </svg>
     </a>
-
-    <!-- Sujets Ouverts -->
-    <div class="flex items-center gap-4 p-5 rounded-2xl border bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200">
-      <div class="w-[52px] h-[52px] rounded-[14px] flex items-center justify-center flex-shrink-0 bg-emerald-500/[0.08]">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" class="w-6 h-6">
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-        </svg>
-      </div>
-      <div class="flex-1 min-w-0">
-        <span class="block text-[1.75rem] font-extrabold text-brand-text leading-none">{{ sujetsOuverts() }}</span>
-        <span class="block text-[0.82rem] text-brand-muted mt-1">Sujets Ouverts</span>
-      </div>
-    </div>
   </div>
 
   <!-- Quick Actions -->
   <div>
     <h2 class="text-[1.15rem] font-bold text-brand-text mb-5">Accès rapide</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-      <a routerLink="/admin/departements" class="group card-ooredoo flex flex-col items-start p-6 hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 cursor-pointer no-underline">
-        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-ooredoo-600 to-ooredoo-800 flex items-center justify-center mb-4 shadow-btn-red">
-          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" class="w-[22px] h-[22px]">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
+      <a
+        routerLink="/admin/departements"
+        class="group card-ooredoo flex flex-col items-start p-6 hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 cursor-pointer no-underline"
+      >
+        <div
+          class="w-12 h-12 rounded-xl bg-gradient-to-br from-ooredoo-600 to-ooredoo-800 flex items-center justify-center mb-4 shadow-btn-red"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="white"
+            stroke-width="2"
+            class="w-[22px] h-[22px]"
+          >
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z" />
           </svg>
         </div>
-        <span class="text-[0.95rem] font-bold text-brand-text mb-1.5">Gérer les Départements</span>
-        <span class="text-[0.82rem] text-brand-muted leading-relaxed">Créer, modifier et archiver les départements</span>
+        <span class="text-[0.95rem] font-bold text-brand-text mb-1.5"
+          >Gérer les Départements</span
+        >
+        <span class="text-[0.82rem] text-brand-muted leading-relaxed"
+          >Créer, modifier et archiver les départements</span
+        >
       </a>
 
-      <a routerLink="/admin/agents-rh" class="group card-ooredoo flex flex-col items-start p-6 hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 cursor-pointer no-underline">
-        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-ooredoo-600 to-ooredoo-800 flex items-center justify-center mb-4 shadow-btn-red">
-          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" class="w-[22px] h-[22px]">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+      <a
+        routerLink="/admin/agents-rh"
+        class="group card-ooredoo flex flex-col items-start p-6 hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 cursor-pointer no-underline"
+      >
+        <div
+          class="w-12 h-12 rounded-xl bg-gradient-to-br from-ooredoo-600 to-ooredoo-800 flex items-center justify-center mb-4 shadow-btn-red"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="white"
+            stroke-width="2"
+            class="w-[22px] h-[22px]"
+          >
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
           </svg>
         </div>
-        <span class="text-[0.95rem] font-bold text-brand-text mb-1.5">Gérer les Agents RH</span>
-        <span class="text-[0.82rem] text-brand-muted leading-relaxed">Ajouter et gérer les agents des ressources humaines</span>
+        <span class="text-[0.95rem] font-bold text-brand-text mb-1.5"
+          >Gérer les Agents RH</span
+        >
+        <span class="text-[0.82rem] text-brand-muted leading-relaxed"
+          >Ajouter et gérer les agents des ressources humaines</span
+        >
       </a>
 
-      <a routerLink="/admin/sujets-pfe" class="group card-ooredoo flex flex-col items-start p-6 hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 cursor-pointer no-underline">
-        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-ooredoo-600 to-ooredoo-800 flex items-center justify-center mb-4 shadow-btn-red">
-          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" class="w-[22px] h-[22px]">
-            <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+      <a
+        routerLink="/admin/encadrants"
+        class="group card-ooredoo flex flex-col items-start p-6 hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 cursor-pointer no-underline"
+      >
+        <div
+          class="w-12 h-12 rounded-xl bg-gradient-to-br from-ooredoo-600 to-ooredoo-800 flex items-center justify-center mb-4 shadow-btn-red"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="white"
+            stroke-width="2"
+            class="w-[22px] h-[22px]"
+          >
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+            <path d="M12 14l-2 4h4l-2-4" />
           </svg>
         </div>
-        <span class="text-[0.95rem] font-bold text-brand-text mb-1.5">Gérer les Sujets PFE</span>
-        <span class="text-[0.82rem] text-brand-muted leading-relaxed">Publier et suivre les sujets de stage disponibles</span>
+        <span class="text-[0.95rem] font-bold text-brand-text mb-1.5"
+          >Gérer les Encadrants</span
+        >
+        <span class="text-[0.82rem] text-brand-muted leading-relaxed"
+          >Ajouter et gérer les encadrants de stage</span
+        >
       </a>
     </div>
   </div>

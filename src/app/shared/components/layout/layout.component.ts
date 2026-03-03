@@ -34,11 +34,6 @@ export class LayoutComponent {
       label: 'Encadrants',
       icon: 'encadrant',
       route: '/admin/encadrants'
-    },
-    {
-      label: 'Sujets PFE',
-      icon: 'briefcase',
-      route: '/admin/sujets-pfe'
     }
   ];
 
